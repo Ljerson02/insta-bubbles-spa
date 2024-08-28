@@ -8,7 +8,7 @@ export const signInWithGoogle = async () => {
     const { user } = await signInWithPopup(FirebaseAuth, googleProvider);
     const { uid, email, displayName, photoURL } = user;
     if(!user) throw new Error('User not found');
-    return { success: true, uid, email, displayName, photoURL };
+    return { success: true, user: { uid, email, displayName, photoURL } };
   } catch (error) {
     return { success: false, error };
   }
