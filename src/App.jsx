@@ -1,7 +1,10 @@
 import React from 'react'
+import { AppRouter } from './router'
 
 export const App = () => {
   return (
-    <h1>Insta Bubbles</h1>
+    <>
+      <AppRouter />
+    </>
   )
 }
