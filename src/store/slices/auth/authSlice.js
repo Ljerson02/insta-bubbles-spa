@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { signInWithGoogle } from '../../../firebase/firebaseAuthAdapter';
+import { signInWithGoogle, singUpWithCredentials } from '../../../firebase/firebaseAuthAdapter';
 
 export const authSlice = createSlice({
   name: 'auth',
@@ -36,6 +36,20 @@ export const doGoogleLogin = () => {
       const authResponse = await signInWithGoogle();
       if(!authResponse.success) return;
       dispatch(login(authResponse.user));
+    } catch (error) {
+      setError(error);
+    }
+    dispatch(setLoading(false));
+  };
+};
+
+export const startUserRegistrationWithCredentials = ( userName, email, password ) => {
+  return async dispatch => {
+    dispatch(setLoading(true));
+    try {
+      const response = await singUpWithCredentials(email, password);
+      if(!response.success) throw new Error(response.error);
+      dispatch(login({ uid: response.uid, email, displayName: userName }));
     } catch (error) {
       setError(error);
     }
