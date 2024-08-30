@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { signInWithGoogle, singUpWithCredentials } from '../../../firebase/firebaseAuthAdapter';
+import { loginWithCredentials, signInWithGoogle, singUpWithCredentials } from '../../../firebase/firebaseAuthAdapter';
+import { doLogout } from '../../../firebase';
 
 export const authSlice = createSlice({
   name: 'auth',
@@ -13,13 +14,13 @@ export const authSlice = createSlice({
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
-    login: (state, payload) => {
+    login: (state, action) => {
       state.isLogged = true;
-      state.user = payload;
+      state.user = action.payload;
       localStorage.setItem('user', JSON.stringify(state.user));
     },
     logout: (state) => {
-      state.isLogged = true;
+      state.isLogged = false;
       state.user = null;
       localStorage.removeItem('user');
     },
@@ -37,7 +38,7 @@ export const doGoogleLogin = () => {
       if(!authResponse.success) return;
       dispatch(login(authResponse.user));
     } catch (error) {
-      setError(error);
+      dispatch(setError(error));
     }
     dispatch(setLoading(false));
   };
@@ -47,12 +48,41 @@ export const startUserRegistrationWithCredentials = ( userName, email, password 
   return async dispatch => {
     dispatch(setLoading(true));
     try {
-      const response = await singUpWithCredentials(email, password);
+      const response = await singUpWithCredentials(userName, email, password);
       if(!response.success) throw new Error(response.error);
-      dispatch(login({ uid: response.uid, email, displayName: userName }));
+      const user = { uid: response.uid, email, displayName: userName };
+      dispatch(login(user));
     } catch (error) {
-      setError(error);
+      dispatch(setError(error.message));
     }
+    dispatch(setLoading(false));
+  };
+};
+
+export const startLoginWithCredentials = ( email, password ) => {
+  return async dispatch => {
+    dispatch(setLoading(true));
+    try {
+      const authResponse = await loginWithCredentials(email, password);
+      if(!authResponse.success) throw new Error(authResponse.error);
+      if(!authResponse.success) return;
+      dispatch(login(authResponse.user));
+    } catch (error) {
+      dispatch(setError(error));
+    }
+    dispatch(setLoading(false));
+  };
+};
+
+export const startLogout = () => {
+  return async dispatch => {
+    dispatch(setLoading(true));
+    try {
+      await doLogout();
+    } catch (error) {
+      console.error('Error on user firebase logout');
+    }
+    dispatch(logout());
     dispatch(setLoading(false));
   };
 };
@@ -61,5 +91,5 @@ export const {
   setLoading,
   login,
   logout,
-  setError
+  setError,
  } = authSlice.actions;
