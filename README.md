@@ -2,6 +2,9 @@
 
 This project is a React and JavaScript-based application that utilizes Firebase for database, storage, and authentication functionalities to provide a type of social media where users can post 'Bubbles' and see how they grow through likes from other users.
 
+## Design concept
+Check it out on Figma `https://www.figma.com/design/R08tg0X92L7yIKMWLuW5Tj/Insta-Bubbles?node-id=0-1&t=B1UjgsCWkTM5xsdo-1`
+
 ## Installation
 
 To run this project locally, please follow these steps:
@@ -19,5 +22,12 @@ To run this project locally, please follow these steps:
 - Auth: Users can register using Google or email and password. 
 - Post: Users can create posts, vizualize owns and the other users.
 
+## Technical debt
+This project was a 48-hour development challenge. To achieve the concept, many things were built with technical debt, including:
+- Use TS
+- Use unit test
+- Implements real likes count
+- Implements Delete user's post
+- Implements React Query
 
 
