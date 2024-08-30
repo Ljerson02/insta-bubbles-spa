@@ -3,5 +3,5 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: "/insta-bubbles-spa"
+  base: "https://Ljerson02.github.io/insta-bubbles-spa"
 })
